@@ -1,0 +1,16 @@
+.vscode/
+.idea/
+node_modules/
+*.DS_Store
+*.log
+*.log.*
+*.log-*
+*.log/*
+*.log-*/
+package-lock.json
+yarn.lock
+npm-debug.log
+npm-debug.log.*
+npm-debug.log-*
+npm-debug.log/*
+*.pyc
