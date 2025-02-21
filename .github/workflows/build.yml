@@ -47,3 +47,9 @@ jobs:
 
       - name: Build Linux X86_64
         run: zig cc writeLicense.c main.c -target x86_64-linux-gnu -O2 -o bin/linux_x86_64
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v2
+        with:
+          name: binaries
+          path: bin/
