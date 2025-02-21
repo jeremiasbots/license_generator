@@ -28,7 +28,9 @@ jobs:
         run: zig version
 
       - name: Create bin/ directory
-        run: mkdir bin
+        run: |
+          rm -rf bin
+          mkdir bin
 
       - name: Build Windows X86_64
         run: |
