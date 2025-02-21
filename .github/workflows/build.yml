@@ -4,6 +4,10 @@ on: [push]
 
 jobs:
   build:
+    permissions:
+      contents: write
+      issues: read
+
     runs-on: ubuntu-latest
 
     env:
