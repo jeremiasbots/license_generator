@@ -342,7 +342,7 @@ void writeBSD2License(const int year, const char* owner, const char* filename) {
     fclose(fp);
 }
 
-void writeGPLv3License(const char* filename) {
+void writeGPLv3License(const int year, const char* owner, const char* filename) {
     FILE *fp;
     fp = fopen(filename, "w");
     if (fp == NULL) {
@@ -984,7 +984,7 @@ void writeGPLv3License(const char* filename) {
         "the \"copyright\" line and a pointer to where the full notice is found.\n"
         "\n"
         "    <one line to give the program's name and a brief idea of what it does.>\n"
-        "    Copyright (C) <year>  <name of author>\n"
+        "    Copyright (C) %d %s\n"
         "\n"
         "    This program is free software: you can redistribute it and/or modify\n"
         "    it under the terms of the GNU General Public License as published by\n"
@@ -1004,7 +1004,7 @@ void writeGPLv3License(const char* filename) {
         "  If the program does terminal interaction, make it output a short\n"
         "notice like this when it starts in an interactive mode:\n"
         "\n"
-        "    <program>  Copyright (C) <year>  <name of author>\n"
+        "    <program>  Copyright (C) %d %s\n"
         "    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.\n"
         "    This is free software, and you are welcome to redistribute it\n"
         "    under certain conditions; type `show c' for details.\n"
@@ -1024,7 +1024,7 @@ void writeGPLv3License(const char* filename) {
         "the library.  If this is what you want to do, use the GNU Lesser General\n"
         "Public License instead of this License.  But first, please read\n"
         "<http://www.gnu.org/philosophy/why-not-lgpl.html>.\n"
-    "\n");
+    "\n", year, owner, year, owner);
     fclose(fp);
 }
 

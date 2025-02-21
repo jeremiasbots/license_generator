@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
                 writeBSD2License(getActualYear(), owner, filename);
             }
             if (strcmp(argv[2], "gplv3") == 0) {
-                writeGPLv3License(filename);
+                writeGPLv3License(getActualYear(), owner, filename);
             }
             if (strcmp(argv[2], "isc") == 0) {
                 writeISCLicense(getActualYear(), owner, filename);
