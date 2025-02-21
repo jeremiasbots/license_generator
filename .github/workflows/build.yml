@@ -1,6 +1,9 @@
 name: Build project
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -59,21 +62,21 @@ jobs:
           path: bin/
 
       - name: Get the latest tag
-        id: semver
+        id: next_version
         run: |
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
-          major=$(echo $latest_tag | grep -oE '^v([0-9]+)\.' | grep -oE '[0-9]+')
-          minor=$(echo $latest_tag | grep -oE '\.([0-9]+)\.' | grep -oE '[0-9]+')
-          patch=$(echo $latest_tag | grep -oE '\.([0-9]+)$' | grep -oE '[0-9]+')
-          if [[ -z "$major" ]]; then major=0; fi
-          if [[ -z "$minor" ]]; then minor=0; fi
-          if [[ -z "$patch" ]]; then patch=0; fi
-          next_patch=$((patch + 1))
-          next_version="v$major.$minor.$next_patch"
-          echo "::set-output name=next_version::$next_version"
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
+          VERSION=${LAST_TAG#v}
+          IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
+          MAJOR=${VERSION_PARTS[0]}
+          MINOR=${VERSION_PARTS[1]}
+          PATCH=${VERSION_PARTS[2]}
+          PATCH=$((PATCH + 1))
+          NEXT_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "Next version: $NEXT_TAG"
+          echo "::set-output name=version::$NEXT_TAG"
 
       - name: Create tag
-        run: git tag ${{ steps.semver.outputs.next_version }}
+        run: git tag ${{ steps.next_version.outputs.version }}
 
       - name: Push tag
         uses: ad-m/github-push-action@master
@@ -84,7 +87,7 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.semver.outputs.next_version }}
-          name: Release ${{ steps.semver.outputs.next_version }}
+          tag_name: ${{ steps.next_version.outputs.version }}
+          name: ${{ steps.next_version.outputs.version }}
           generate_release_notes: true
           files: bin/*
