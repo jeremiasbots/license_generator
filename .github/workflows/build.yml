@@ -9,7 +9,6 @@ jobs:
   build:
     permissions:
       contents: write
-      issues: read
 
     runs-on: ubuntu-latest
 
@@ -20,12 +19,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Zig
-        run: |
-          wget https://ziglang.org/download/$ZIG_VERSION/zig-linux-x86_64-$ZIG_VERSION.tar.xz
-          tar -xf zig-linux-x86_64-$ZIG_VERSION.tar.xz
-          mv zig-linux-x86_64-$ZIG_VERSION ~/zig
-          echo "$HOME/zig" >> $GITHUB_PATH
+      - name: Set up Zig
+        uses: mlugg/setup-zig@v1
+        with:
+          version: 0.13.0
 
       - name: Check Zig version
         run: zig version
@@ -55,39 +52,10 @@ jobs:
       - name: Build Linux X86_64
         run: zig cc writeLicense.c main.c -target x86_64-linux-gnu -O2 -o bin/linux_x86_64
 
-      - name: Upload binaries
-        uses: actions/upload-artifact@v4
-        with:
-          name: binaries
-          path: bin/
-
-      - name: Get the latest tag
-        id: next_version
+      - name: Push changes
         run: |
-          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null)
-          VERSION=${LAST_TAG#v}
-          IFS='.' read -r -a VERSION_PARTS <<< "$VERSION"
-          MAJOR=${VERSION_PARTS[0]}
-          MINOR=${VERSION_PARTS[1]}
-          PATCH=${VERSION_PARTS[2]}
-          PATCH=$((PATCH + 1))
-          NEXT_TAG="v${MAJOR}.${MINOR}.${PATCH}"
-          echo "Next version: $NEXT_TAG"
-          echo "::set-output name=version::$NEXT_TAG"
-
-      - name: Create tag
-        run: git tag ${{ steps.next_version.outputs.version }}
-
-      - name: Push tag
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          tags: true
-
-      - name: Create release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.next_version.outputs.version }}
-          name: ${{ steps.next_version.outputs.version }}
-          generate_release_notes: true
-          files: bin/*
+          git config --global user.name "Dark Actions"
+          git config --global user.email "dark-actions@doitall.work"
+          git add .
+          git commit -m "Add binaries"
+          git push origin master
