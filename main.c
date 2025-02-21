@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
             return 0;
         }
         char* owner = strtok(argv[2], " ");
-        fprintf(fp, owner);
+        fprintf(fp, "%s", owner);
         fclose(fp);
     }
     return 0;
