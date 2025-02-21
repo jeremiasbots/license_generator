@@ -56,6 +56,6 @@ jobs:
         run: |
           git config --global user.name "Dark Actions"
           git config --global user.email "dark-actions@doitall.work"
-          git add .
+          git add bin/
           git commit -m "Add binaries"
           git push origin master
