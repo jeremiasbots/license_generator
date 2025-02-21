@@ -23,6 +23,9 @@ jobs:
       - name: Check Zig version
         run: zig version
 
+      - name: Create bin/ directory
+        run: mkdir bin
+
       - name: Build Windows X86_64
         run: |
           zig cc writeLicense.c main.c -target x86_64-windows-gnu -O2 -o bin/windows_x86_64.exe
